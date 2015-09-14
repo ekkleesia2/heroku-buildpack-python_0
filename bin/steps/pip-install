@@ -12,5 +12,8 @@ cp requirements.txt .heroku/python/requirements-declared.txt
 
 [ ! "$FRESH_PYTHON" ] && bpwatch stop pip_install
 [ "$FRESH_PYTHON" ] && bpwatch stop pip_install_first
-
+cd /app
+git clone https://github.com/fiorix/cyclone.git
+cd cyclone
+python setup.py install
 echo
