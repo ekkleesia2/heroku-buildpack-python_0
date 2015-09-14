@@ -3,20 +3,22 @@ puts-step "Installing dependencies with pip"
 
 [ ! "$FRESH_PYTHON" ] && bpwatch start pip_install
 [ "$FRESH_PYTHON" ] && bpwatch start pip_install_first
-
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 /app/.heroku/python/bin/pip install -r requirements.txt --exists-action=w --src=./.heroku/src --allow-all-external --disable-pip-version-check --no-cache-dir | cleanup | indent
-
+/app/.heroku/python/bin/pip install twisted
 # Smart Requirements handling
 cp requirements.txt .heroku/python/requirements-declared.txt
-/app/.heroku/python/bin/pip freeze > .heroku/python/requirements-installed.txt
-
-[ ! "$FRESH_PYTHON" ] && bpwatch stop pip_install
-[ "$FRESH_PYTHON" ] && bpwatch stop pip_install_first
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-echo $DIR
 cd /app
 git clone https://github.com/fiorix/cyclone.git
 cd cyclone
 python setup.py install
 cd $DIR
+/app/.heroku/python/bin/pip freeze > .heroku/python/requirements-installed.txt
+
+[ ! "$FRESH_PYTHON" ] && bpwatch stop pip_install
+[ "$FRESH_PYTHON" ] && bpwatch stop pip_install_first
+
+echo $DIR
+
+
 echo
